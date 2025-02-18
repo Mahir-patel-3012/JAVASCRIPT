@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Form</title>
+</head>
+<body>
+
+  <form id="myForm">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name">
+    </div>
+    
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email">
+    </div>
+    
+    <div id="errorMessage" style="color: red;"></div>
+    
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    // Select the form and error message div
+    const form = document.getElementById('myForm');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); // Prevent form from submitting
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      
+      // Clear previous error message
+      errorMessage.textContent = '';
+
+      // Validation checks
+      if (!name || !email) {
+        errorMessage.textContent = 'Both fields are required!';
+        return;
+      }
+
+      // Simple email format validation
+      const emailPattern = /\S+@\S+\.\S+/;
+      if (!emailPattern.test(email)) {
+        errorMessage.textContent = 'Please enter a valid email.';
+        return;
+      }
+
+      // If everything is fine, submit form (here, we just log the data)
+      console.log('Form submitted:', { name, email });
+    });
+  </script>
+
+</body>
+</html>

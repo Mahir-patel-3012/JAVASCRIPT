@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch Multiple APIs with Promise.all</title>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+        }
+        img {
+            border-radius: 50%;
+            margin-top: 10px;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+</style>
+</head>
+<body>
+<h2>Fetch Multiple APIs with Promise.all</h2>
+<button onclick="fetchData()">Fetch Data</button>
+<div id="container">
+<h3>User Info</h3>
+<p id="user-name">Loading...</p>
+<img id="user-image" src="" alt="User Image" width="100">
+<h3>Random Quote</h3>
+<p id="quote">Loading...</p>
+</div>
+ 
+    <script>
+        async function fetchData() {
+            try {
+                const userAPI = fetch("https://randomuser.me/api/").then(res => res.json());
+                const quoteAPI = fetch("https://api.quotable.io/random").then(res => res.json());
+ 
+                const [userData, quoteData] = await Promise.all([userAPI, quoteAPI]);
+ 
+                if (!userData.results || userData.results.length === 0) {
+                    throw new Error("User data not found");
+                }
+ 
+                const user = userData.results[0];
+                document.getElementById("user-name").innerText = `${user.name.first} ${user.name.last}`;
+                document.getElementById("user-image").src = user.picture.medium || "https://via.placeholder.com/80";
+                document.getElementById("quote").innerText = `"${quoteData.content}" - ${quoteData.author}`;
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.getElementById("user-name").innerText = "Failed to load user";
+                document.getElementById("quote").innerText = "Failed to load quote";
+            }
+        }
+</script>
+</body>
+</html>

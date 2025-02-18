@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+          div {
+            background-color: bisque;
+          }
+        </style>
+    </head>
+    <body>
+        <div id="div">
+            <h1>Title : </h1><h1 id="title">Hyy</h1>
+            <h3 id="body"></h3>
+        </div>
+        <script>
+            const title = document.getElementById("title");
+            const body = document.getElementById("body");
+            fetch("https://jsonplaceholder.typicode.com/posts/1")
+                .then((res) => {
+                    return res.json();
+                })
+                .then((jsonData) => {
+                    let Data = jsonData;
+                    title.innerHTML = Data.title;
+                    body.innerHTML = Data.body;
+                })
+                .catch((err) => {
+                    console.log("Something want wrong" + "  " + err);
+                });
+        </script>
+    </body>
+</html>
