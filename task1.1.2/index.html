@@ -1,60 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Form</title>
+  
+    <title>Advanced Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffffff;
+        }
+        .container {
+            background: rgb(253, 253, 253);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.893);
+            width: 350px;
+        }
+        .input-group {
+            margin-bottom: 12px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #f10606;
+            border-radius: 5px;
+        }
+        .error {
+            color: rgb(136, 68, 196);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 35px;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: blue;
+            color: rgb(88, 68, 213);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
 
-  <form id="myForm">
-    <div>
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name">
+    <div class="container">
+        <h2>Register</h2>
+        <form id="advancedForm">
+            
+            <div class="input-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+                <div class="error" id="nameError"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email">
+                <div class="error" id="emailError"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone">
+                <div class="error" id="phoneError"></div>
+            </div>
+
+            <div class="input-group">
+                <label>Gender:</label>
+                <input type="radio" name="gender" value="Male"> Male
+                <input type="radio" name="gender" value="Female"> Female
+                <div class="error" id="genderError"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="country">Country:</label>
+                <select id="country">
+                    <option value="">Select Country</option>
+                    <option value="USA">USA</option>
+                    <option value="India">India</option>
+                    <option value="UK">UK</option>
+                </select>
+                <div class="error" id="countryError"></div>
+            </div>
+
+            <div class="input-group password-container">
+                <label for="password">Password:</label>
+                <input type="password" id="password">
+        
+                <div class="error" id="passwordError"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword">
+                <div class="error" id="confirmPasswordError"></div>
+            </div>
+
+            <div class="input-group">
+                <input type="checkbox" id="terms">
+                <label for="terms">I agree to the terms and conditions</label>
+                <div class="error" id="termsError"></div>
+            </div>
+
+            <button type="submit" id="submitBtn" disabled>Submit</button>
+        </form>
     </div>
-    
-    <div>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email">
-    </div>
-    
-    <div id="errorMessage" style="color: red;"></div>
-    
-    <button type="submit">Submit</button>
-  </form>
 
-  <script>
-    // Select the form and error message div
-    const form = document.getElementById('myForm');
-    const errorMessage = document.getElementById('errorMessage');
+    <script>
+        function togglePassword() {
+            let passwordField = document.getElementById("password");
+            passwordField.type = passwordField.type === "password" ? "text" : "password";
+        }
 
-    // Handle form submission
-    form.addEventListener('submit', function(e) {
-      e.preventDefault(); // Prevent form from submitting
+        document.getElementById("advancedForm").addEventListener("input", validateForm);
 
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      
-      // Clear previous error message
-      errorMessage.textContent = '';
+        function validateForm() {
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let password = document.getElementById("password").value.trim();
+            let confirmPassword = document.getElementById("confirmPassword").value.trim();
+            let gender = document.querySelector('input[name="gender"]:checked');
+            let country = document.getElementById("country").value;
+            let terms = document.getElementById("terms").checked;
 
-      // Validation checks
-      if (!name || !email) {
-        errorMessage.textContent = 'Both fields are required!';
-        return;
-      }
+            let isValid = true;
 
-      // Simple email format validation
-      const emailPattern = /\S+@\S+\.\S+/;
-      if (!emailPattern.test(email)) {
-        errorMessage.textContent = 'Please enter a valid email.';
-        return;
-      }
+            // Validate name
+            document.getElementById("nameError").textContent = name ? "" : "Name is required.";
+            if (!name) isValid = false;
 
-      // If everything is fine, submit form (here, we just log the data)
-      console.log('Form submitted:', { name, email });
-    });
-  </script>
+            // Validate email
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            document.getElementById("emailError").textContent = emailPattern.test(email) ? "" : "Invalid email.";
+            if (!emailPattern.test(email)) isValid = false;
+
+            // Validate phone
+            let phonePattern = /^[0-9]{10}$/;
+            document.getElementById("phoneError").textContent = phonePattern.test(phone) ? "" : "Invalid phone number.";
+            if (!phonePattern.test(phone)) isValid = false;
+
+            // Validate gender
+            document.getElementById("genderError").textContent = gender ? "" : "Select gender.";
+            if (!gender) isValid = false;
+
+            // Validate country
+            document.getElementById("countryError").textContent = country ? "" : "Select a country.";
+            if (!country) isValid = false;
+
+            // Validate password
+            document.getElementById("passwordError").textContent = password.length >= 6 ? "" : "Password must be 6+ chars.";
+            if (password.length < 6) isValid = false;
+
+            // Validate confirm password
+            document.getElementById("confirmPasswordError").textContent = confirmPassword === password ? "" : "Passwords do not match.";
+            if (confirmPassword !== password) isValid = false;
+
+            // Validate terms
+            document.getElementById("termsError").textContent = terms ? "" : "You must agree to the terms.";
+            if (!terms) isValid = false;
+
+            // Enable or disable submit button
+            document.getElementById("submitBtn").disabled = !isValid;
+        }
+
+        document.getElementById("advancedForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            alert("Form submitted successfully!");
+        });
+    </script>
 
 </body>
 </html>
